@@ -62,8 +62,14 @@ header.hero p {
   padding: 0 1rem 3rem;
 }
 
+.separador {
+  border: none;
+  border-top: 1px solid rgba(128, 128, 128, .3);
+  margin: 2.5rem 0 0;
+}
+
 .titulo-listado {
-  margin: 2.5rem 0 1rem;
+  margin: 1.5rem 0 1rem;
   font-size: 1.15rem;
   text-align: center;
 }
@@ -254,8 +260,9 @@ table.tabla-admin td.acciones-fila {
   flex-wrap: wrap;
 }
 
-/* 10 columnas quedan demasiado angostas para tocar con el dedo en un
-   celular; con menos columnas cada boleta queda más grande y legible. */
+/* Se mantiene la grilla en 10 columnas (para que un pantallazo desde el
+   celular muestre las 100 boletas cuadradas), solo se encogen tamaños
+   para que quepa sin desbordar el ancho de pantallas angostas. */
 @media (max-width: 480px) {
   header.hero .logo {
     max-width: 100px;
@@ -266,13 +273,18 @@ table.tabla-admin td.acciones-fila {
     font-size: 1.3rem;
   }
 
+  .contenedor {
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+
   .grilla {
-    grid-template-columns: repeat(5, 1fr);
-    gap: .4rem;
+    gap: .25rem;
   }
 
   .boleta {
-    font-size: .85rem;
+    font-size: .65rem;
+    border-radius: 6px;
   }
 
   table.tabla-admin th, table.tabla-admin td {
