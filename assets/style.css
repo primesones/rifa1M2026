@@ -171,12 +171,6 @@ header.hero p {
 
 .campo label { font-size: .85rem; color: var(--color-muted); }
 
-#info-datos-pago {
-  font-size: .8rem;
-  color: var(--color-disponible);
-  font-weight: 600;
-}
-
 input, select {
   padding: .6rem .7rem;
   border-radius: 8px;

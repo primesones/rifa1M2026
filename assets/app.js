@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('form-reserva').addEventListener('submit', onSubmitReserva);
   document.getElementById('btn-cancelar-modal').addEventListener('click', cerrarModal);
-  document.getElementById('input-metodo-pago').addEventListener('change', onCambioMetodoPago);
   document.getElementById('btn-cerrar-modal-info').addEventListener('click', cerrarModalInfo);
 
   setInterval(() => {
@@ -126,19 +125,12 @@ function abrirModal(numero) {
   document.getElementById('modal-numero').textContent = numero;
   document.getElementById('mensaje-reserva').textContent = '';
   document.getElementById('mensaje-reserva').className = 'mensaje-estado';
-  document.getElementById('info-datos-pago').textContent = '';
   document.getElementById('modal-reserva').hidden = false;
-}
-
-function onCambioMetodoPago() {
-  const metodoPago = document.getElementById('input-metodo-pago').value;
-  document.getElementById('info-datos-pago').textContent = DATOS_PAGO[metodoPago] || '';
 }
 
 function cerrarModal() {
   document.getElementById('modal-reserva').hidden = true;
   document.getElementById('form-reserva').reset();
-  document.getElementById('info-datos-pago').textContent = '';
   numeroSeleccionado = null;
 }
 
@@ -151,11 +143,10 @@ async function onSubmitReserva(ev) {
 
   const nombre = document.getElementById('input-nombre').value.trim();
   const telefono = document.getElementById('input-telefono').value.trim();
-  const metodoPago = document.getElementById('input-metodo-pago').value;
   const archivo = document.getElementById('input-comprobante').files[0];
 
-  if (!nombre || !telefono || !metodoPago) {
-    mensaje.textContent = 'Completa nombre, teléfono y método de pago.';
+  if (!nombre || !telefono) {
+    mensaje.textContent = 'Completa nombre y teléfono.';
     mensaje.className = 'mensaje-estado error';
     return;
   }
@@ -168,8 +159,7 @@ async function onSubmitReserva(ev) {
       action: 'reservar',
       numero: numeroSeleccionado,
       nombre,
-      telefono,
-      metodoPago
+      telefono
     };
 
     if (archivo) {
