@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('form-reserva').addEventListener('submit', onSubmitReserva);
   document.getElementById('btn-cancelar-modal').addEventListener('click', cerrarModal);
+  document.getElementById('input-metodo-pago').addEventListener('change', onCambioMetodoPago);
 
   setInterval(() => {
     if (document.visibilityState === 'visible') cargarBoletas();
@@ -74,12 +75,19 @@ function abrirModal(numero) {
   document.getElementById('modal-numero').textContent = numero;
   document.getElementById('mensaje-reserva').textContent = '';
   document.getElementById('mensaje-reserva').className = 'mensaje-estado';
+  document.getElementById('info-datos-pago').textContent = '';
   document.getElementById('modal-reserva').hidden = false;
+}
+
+function onCambioMetodoPago() {
+  const metodoPago = document.getElementById('input-metodo-pago').value;
+  document.getElementById('info-datos-pago').textContent = DATOS_PAGO[metodoPago] || '';
 }
 
 function cerrarModal() {
   document.getElementById('modal-reserva').hidden = true;
   document.getElementById('form-reserva').reset();
+  document.getElementById('info-datos-pago').textContent = '';
   numeroSeleccionado = null;
 }
 
