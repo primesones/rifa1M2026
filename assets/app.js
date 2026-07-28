@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('form-reserva').addEventListener('submit', onSubmitReserva);
   document.getElementById('btn-cancelar-modal').addEventListener('click', cerrarModal);
   document.getElementById('input-metodo-pago').addEventListener('change', onCambioMetodoPago);
+  document.getElementById('btn-cerrar-modal-info').addEventListener('click', cerrarModalInfo);
 
   setInterval(() => {
     if (document.visibilityState === 'visible') cargarBoletas();
@@ -48,7 +49,12 @@ async function cargarBoletas() {
     const res = await fetch(`${WEB_APP_URL}?action=getBoletas`);
     const data = await res.json();
     if (!data.ok) return;
-    renderGrilla(data.boletas);
+    const boletas = data.boletas.sort((a, b) => a.numero.localeCompare(b.numero));
+    renderGrilla(boletas);
+    renderListado(boletas);
+
+    const disponibles = boletas.filter((b) => b.estado === 'Disponible').length;
+    document.getElementById('info-disponibles').textContent = disponibles;
   } catch (err) {
     console.error('Error cargando boletas', err);
   }
@@ -57,19 +63,44 @@ async function cargarBoletas() {
 function renderGrilla(boletas) {
   const grilla = document.getElementById('grilla');
   grilla.innerHTML = '';
-  boletas
-    .sort((a, b) => a.numero.localeCompare(b.numero))
-    .forEach((boleta) => {
-      const btn = document.createElement('button');
-      btn.className = `boleta ${ESTADOS_CLASE[boleta.estado] || 'disponible'}`;
-      btn.textContent = boleta.numero;
-      btn.disabled = boleta.estado !== 'Disponible';
-      btn.addEventListener('click', () => abrirModal(boleta.numero));
-      grilla.appendChild(btn);
+  boletas.forEach((boleta) => {
+    const btn = document.createElement('button');
+    btn.className = `boleta ${ESTADOS_CLASE[boleta.estado] || 'disponible'}`;
+    btn.textContent = boleta.numero;
+    btn.addEventListener('click', () => {
+      if (boleta.estado === 'Disponible') {
+        abrirModal(boleta.numero);
+      } else {
+        abrirModalInfo(boleta);
+      }
     });
+    grilla.appendChild(btn);
+  });
+}
 
-  const disponibles = boletas.filter((b) => b.estado === 'Disponible').length;
-  document.getElementById('info-disponibles').textContent = disponibles;
+function renderListado(boletas) {
+  const tbody = document.getElementById('cuerpo-listado');
+  tbody.innerHTML = '';
+  boletas.forEach((boleta) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${boleta.numero}</td>
+      <td><span class="badge ${ESTADOS_CLASE[boleta.estado] || 'disponible'}">${boleta.estado}</span></td>
+      <td>${escaparHtml(boleta.nombre) || '—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function abrirModalInfo(boleta) {
+  document.getElementById('info-modal-numero').textContent = boleta.numero;
+  document.getElementById('info-modal-estado').textContent = boleta.estado;
+  document.getElementById('info-modal-nombre').textContent = boleta.nombre || 'Sin datos';
+  document.getElementById('modal-info').hidden = false;
+}
+
+function cerrarModalInfo() {
+  document.getElementById('modal-info').hidden = true;
 }
 
 function abrirModal(numero) {
@@ -175,6 +206,14 @@ function comprimirImagen(file, maxAncho = 1200, calidad = 0.65) {
     lector.onerror = reject;
     lector.readAsDataURL(file);
   });
+}
+
+// Evita XSS: el nombre lo escribe libremente cualquier visitante en el
+// formulario de reserva y se inserta como HTML en el listado público.
+function escaparHtml(texto) {
+  const div = document.createElement('div');
+  div.textContent = texto == null ? '' : String(texto);
+  return div.innerHTML;
 }
 
 function formatearCOP(valor) {

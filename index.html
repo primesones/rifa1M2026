@@ -28,6 +28,31 @@
 
   <div id="grilla" class="grilla"></div>
 
+  <h2 class="titulo-listado">Listado de boletas</h2>
+  <div class="tabla-scroll">
+    <table class="tabla-admin">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Estado</th>
+          <th>Nombre</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpo-listado"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<div id="modal-info" class="modal-overlay" hidden>
+  <div class="modal">
+    <h2>Boleta <span id="info-modal-numero"></span></h2>
+    <p>Estado: <strong id="info-modal-estado"></strong></p>
+    <p>Reservada por: <strong id="info-modal-nombre"></strong></p>
+    <div class="acciones-modal">
+      <button type="button" id="btn-cerrar-modal-info" class="btn btn-secundario">Cerrar</button>
+    </div>
+  </div>
 </div>
 
 <div id="modal-reserva" class="modal-overlay" hidden>

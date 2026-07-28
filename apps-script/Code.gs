@@ -104,6 +104,15 @@ function normalizarValor_(valor) {
   return valor;
 }
 
+// Se abrevia acá, no en el frontend, para que el nombre completo nunca
+// viaje en la respuesta pública de getBoletas (visible en las devtools).
+function abreviarNombre_(nombreCompleto) {
+  if (!nombreCompleto) return '';
+  var partes = String(nombreCompleto).trim().split(/\s+/);
+  if (partes.length === 1) return partes[0];
+  return partes[0] + ' ' + partes[1].charAt(0).toUpperCase() + '.';
+}
+
 function esAdminValido_(codigo) {
   var config = getConfigMap_();
   return !!codigo && String(codigo) === String(config.CodigoAdmin);
@@ -163,7 +172,8 @@ function doGet(e) {
       boletas.push({
         numero: data[i][COL.NUMERO - 1],
         estado: data[i][COL.ESTADO - 1],
-        metodoPago: data[i][COL.METODO_PAGO - 1]
+        metodoPago: data[i][COL.METODO_PAGO - 1],
+        nombre: abreviarNombre_(data[i][COL.NOMBRE - 1])
       });
     }
     return responder_({ ok: true, boletas: boletas });

@@ -5,6 +5,14 @@
 
 let todasLasBoletas = [];
 
+// Evita XSS: nombre/telefono los escribe libremente cualquier visitante
+// en el formulario público y se insertan como HTML en esta tabla.
+function escaparHtmlAdmin(texto) {
+  const div = document.createElement('div');
+  div.textContent = texto == null ? '' : String(texto);
+  return div.innerHTML;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('form-login').addEventListener('submit', onSubmitLogin);
   document.getElementById('form-ganador').addEventListener('submit', onSubmitGanador);
@@ -80,9 +88,9 @@ function renderTabla() {
       tr.innerHTML = `
         <td>${boleta.numero}</td>
         <td><span class="badge ${boleta.estado.toLowerCase()}">${boleta.estado}</span></td>
-        <td>${boleta.nombre || ''}</td>
-        <td>${boleta.telefono || ''}</td>
-        <td>${boleta.metodoPago || ''}</td>
+        <td>${escaparHtmlAdmin(boleta.nombre)}</td>
+        <td>${escaparHtmlAdmin(boleta.telefono)}</td>
+        <td>${escaparHtmlAdmin(boleta.metodoPago)}</td>
         <td>${boleta.comprobanteURL ? `<a href="${boleta.comprobanteURL}" target="_blank" rel="noopener">Ver</a>` : '—'}</td>
       `;
 
