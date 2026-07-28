@@ -20,6 +20,11 @@
 
 * { box-sizing: border-box; }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -247,4 +252,35 @@ table.tabla-admin td.acciones-fila {
   gap: .5rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+}
+
+/* 10 columnas quedan demasiado angostas para tocar con el dedo en un
+   celular; con menos columnas cada boleta queda más grande y legible. */
+@media (max-width: 480px) {
+  header.hero .logo {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  header.hero h1 {
+    font-size: 1.3rem;
+  }
+
+  .grilla {
+    grid-template-columns: repeat(5, 1fr);
+    gap: .4rem;
+  }
+
+  .boleta {
+    font-size: .85rem;
+  }
+
+  table.tabla-admin th, table.tabla-admin td {
+    padding: .4rem .3rem;
+    font-size: .8rem;
+  }
+
+  .modal {
+    padding: 1.25rem;
+  }
 }

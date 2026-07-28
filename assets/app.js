@@ -22,9 +22,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 18000);
 });
 
+// Reintenta antes de rendirse: en redes móviles el primer intento a veces
+// falla (DNS/TLS lentos) y sin esto la página quedaba vacía hasta el
+// siguiente refresco automático a los 18 segundos.
+async function fetchConReintentos(url, intentos = 3, esperaMs = 800) {
+  let ultimoError;
+  for (let i = 0; i < intentos; i++) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res;
+    } catch (err) {
+      ultimoError = err;
+      if (i < intentos - 1) await new Promise((r) => setTimeout(r, esperaMs));
+    }
+  }
+  throw ultimoError;
+}
+
 async function cargarConfig() {
   try {
-    const res = await fetch(`${WEB_APP_URL}?action=getConfig`);
+    const res = await fetchConReintentos(`${WEB_APP_URL}?action=getConfig`);
     const data = await res.json();
     if (!data.ok) return;
 
@@ -46,7 +64,7 @@ async function cargarConfig() {
 
 async function cargarBoletas() {
   try {
-    const res = await fetch(`${WEB_APP_URL}?action=getBoletas`);
+    const res = await fetchConReintentos(`${WEB_APP_URL}?action=getBoletas`);
     const data = await res.json();
     if (!data.ok) return;
     const boletas = data.boletas.sort((a, b) => a.numero.localeCompare(b.numero));
