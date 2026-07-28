@@ -1,7 +1,9 @@
 :root {
   --color-disponible: #2e7d32;
   --color-reservada: #f9a825;
-  --color-pagada: #c62828;
+  --color-pagada: #1565c0;
+  --color-no-disponible: #6b6b6b;
+  --color-error: #c62828;
   --color-bg: #f7f7f8;
   --color-card: #ffffff;
   --color-text: #1c1c1e;
@@ -99,8 +101,7 @@ header.hero p {
 }
 
 .leyenda .disponible::before { background: var(--color-disponible); }
-.leyenda .reservada::before { background: var(--color-reservada); }
-.leyenda .pagada::before { background: var(--color-pagada); }
+.leyenda .no-disponible::before { background: var(--color-no-disponible); }
 
 .grilla {
   display: grid;
@@ -124,8 +125,7 @@ header.hero p {
 
 .boleta:active { transform: scale(.93); }
 .boleta.disponible { background: var(--color-disponible); }
-.boleta.reservada { background: var(--color-reservada); }
-.boleta.pagada { background: var(--color-pagada); }
+.boleta.reservada, .boleta.pagada { background: var(--color-no-disponible); }
 
 .banner-ganador {
   background: linear-gradient(135deg, #ffd54f, #ffb300);
@@ -197,7 +197,7 @@ button.btn {
 
 .btn-primario { background: #2e7d32; color: #fff; flex: 1; }
 .btn-secundario { background: #e0e0e0; color: #333; }
-.btn-peligro { background: var(--color-pagada); color: #fff; }
+.btn-peligro { background: var(--color-error); color: #fff; }
 
 .mensaje-estado {
   min-height: 1.3rem;
@@ -207,7 +207,7 @@ button.btn {
   margin-top: 1rem;
 }
 
-.mensaje-estado.error { color: var(--color-pagada); }
+.mensaje-estado.error { color: var(--color-error); }
 .mensaje-estado.exito { color: var(--color-disponible); }
 
 table.tabla-admin {
