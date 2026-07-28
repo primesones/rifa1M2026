@@ -27,7 +27,6 @@ async function cargarConfig() {
     const data = await res.json();
     if (!data.ok) return;
 
-    document.getElementById('info-premio').textContent = formatearCOP(data.premio);
     document.getElementById('info-valor-boleta').textContent = formatearCOP(data.valorBoleta);
     document.getElementById('info-loteria').textContent = data.loteria;
     document.getElementById('info-fecha').textContent = formatearFecha(data.fechaSorteo);
@@ -68,6 +67,9 @@ function renderGrilla(boletas) {
       btn.addEventListener('click', () => abrirModal(boleta.numero));
       grilla.appendChild(btn);
     });
+
+  const disponibles = boletas.filter((b) => b.estado === 'Disponible').length;
+  document.getElementById('info-disponibles').textContent = disponibles;
 }
 
 function abrirModal(numero) {
