@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Rifa 1M · Administración</title>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+<div id="vista-login" class="login-admin">
+  <h1>Administración Rifa 1M</h1>
+  <form id="form-login">
+    <div class="campo">
+      <label for="input-codigo-admin">Código de administrador</label>
+      <input type="password" id="input-codigo-admin" required />
+    </div>
+    <button type="submit" class="btn btn-primario">Entrar</button>
+    <div id="mensaje-login" class="mensaje-estado"></div>
+  </form>
+</div>
+
+<div id="vista-admin" class="contenedor" hidden style="max-width:960px;">
+  <header style="display:flex; justify-content:space-between; align-items:center; padding-top:1.5rem;">
+    <h1 style="margin:0;">Administración Rifa 1M</h1>
+    <button id="btn-salir" class="btn btn-secundario">Salir</button>
+  </header>
+
+  <section style="margin:1.5rem 0;">
+    <h2>Declarar boleta ganadora</h2>
+    <form id="form-ganador" style="display:flex; gap:.5rem; align-items:flex-end; flex-wrap:wrap;">
+      <div class="campo" style="margin-bottom:0;">
+        <label for="input-numero-ganador">Número ganador</label>
+        <input type="text" id="input-numero-ganador" maxlength="2" placeholder="00" />
+      </div>
+      <button type="submit" class="btn btn-primario">Declarar ganador</button>
+    </form>
+    <div id="mensaje-ganador" class="mensaje-estado"></div>
+  </section>
+
+  <section>
+    <div class="filtros-admin">
+      <select id="filtro-estado">
+        <option value="Todas">Todas</option>
+        <option value="Disponible">Disponible</option>
+        <option value="Reservada">Reservada</option>
+        <option value="Pagada">Pagada</option>
+      </select>
+      <button id="btn-actualizar" class="btn btn-secundario">Actualizar</button>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="tabla-admin">
+        <thead>
+          <tr>
+            <th>Numero</th>
+            <th>Estado</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Metodo pago</th>
+            <th>Comprobante</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla-admin"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

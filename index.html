@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rifa 1M</title>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+<header class="hero">
+  <h1>Rifa 1M</h1>
+  <p>Premio: <strong id="info-premio">—</strong></p>
+  <p>Boleta: <strong id="info-valor-boleta">—</strong></p>
+  <p>Sorteo: <strong id="info-fecha">—</strong> · <span id="info-loteria">—</span></p>
+</header>
+
+<div class="contenedor">
+
+  <div id="banner-ganador" class="banner-ganador" hidden></div>
+
+  <div class="leyenda">
+    <span class="disponible">Disponible</span>
+    <span class="reservada">Reservada</span>
+    <span class="pagada">Pagada</span>
+  </div>
+
+  <div id="grilla" class="grilla"></div>
+
+</div>
+
+<div id="modal-reserva" class="modal-overlay" hidden>
+  <div class="modal">
+    <h2>Reservar boleta <span id="modal-numero"></span></h2>
+    <form id="form-reserva">
+      <div class="campo">
+        <label for="input-nombre">Nombre completo</label>
+        <input type="text" id="input-nombre" required />
+      </div>
+      <div class="campo">
+        <label for="input-telefono">Teléfono</label>
+        <input type="tel" id="input-telefono" required />
+      </div>
+      <div class="campo">
+        <label for="input-metodo-pago">Método de pago</label>
+        <select id="input-metodo-pago" required>
+          <option value="">Selecciona...</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Nequi">Nequi</option>
+          <option value="Bre-B">Bre-B</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="input-comprobante">Comprobante de pago (opcional)</label>
+        <input type="file" id="input-comprobante" accept="image/*" />
+      </div>
+      <div class="acciones-modal">
+        <button type="submit" id="btn-confirmar-reserva" class="btn btn-primario">Confirmar reserva</button>
+        <button type="button" id="btn-cancelar-modal" class="btn btn-secundario">Cancelar</button>
+      </div>
+      <div id="mensaje-reserva" class="mensaje-estado"></div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
