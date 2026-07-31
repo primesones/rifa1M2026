@@ -59,6 +59,7 @@ header.hero p {
 }
 
 header.hero .linea-disponibles {
+  margin-top: .75rem;
   font-weight: 700;
   font-size: 1.05rem;
   color: var(--color-disponible);
