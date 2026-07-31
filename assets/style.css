@@ -58,6 +58,12 @@ header.hero p {
   color: var(--color-muted);
 }
 
+header.hero .linea-disponibles {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-disponible);
+}
+
 .contenedor {
   max-width: 720px;
   margin: 0 auto;
