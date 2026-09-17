@@ -143,10 +143,9 @@ async function onSubmitReserva(ev) {
 
   const nombre = document.getElementById('input-nombre').value.trim();
   const telefono = document.getElementById('input-telefono').value.trim();
-  const archivo = document.getElementById('input-comprobante').files[0];
 
-  if (!nombre || !telefono) {
-    mensaje.textContent = 'Completa nombre y teléfono.';
+  if (!nombre) {
+    mensaje.textContent = 'Completa tu nombre.';
     mensaje.className = 'mensaje-estado error';
     return;
   }
@@ -161,11 +160,6 @@ async function onSubmitReserva(ev) {
       nombre,
       telefono
     };
-
-    if (archivo) {
-      payload.comprobanteBase64 = await comprimirImagen(archivo);
-      payload.nombreArchivo = archivo.name;
-    }
 
     const res = await fetch(WEB_APP_URL, {
       method: 'POST',
@@ -190,30 +184,6 @@ async function onSubmitReserva(ev) {
   } finally {
     btnConfirmar.disabled = false;
   }
-}
-
-// Redimensiona y comprime la imagen en el navegador antes de enviarla en base64,
-// para no arriesgar timeouts del Apps Script con fotos de celular sin comprimir.
-function comprimirImagen(file, maxAncho = 1200, calidad = 0.65) {
-  return new Promise((resolve, reject) => {
-    const lector = new FileReader();
-    lector.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const escala = Math.min(1, maxAncho / img.width);
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width * escala;
-        canvas.height = img.height * escala;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', calidad));
-      };
-      img.onerror = reject;
-      img.src = e.target.result;
-    };
-    lector.onerror = reject;
-    lector.readAsDataURL(file);
-  });
 }
 
 // Evita XSS: el nombre lo escribe libremente cualquier visitante en el
