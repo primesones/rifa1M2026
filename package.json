@@ -1,0 +1,11 @@
+{
+  "name": "rifa1m-2026-automatizacion",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Scripts de automatización para la webapp de Rifa1M (no forman parte del sitio publicado)",
+  "type": "module",
+  "devDependencies": {
+    "playwright": "^1.48.0",
+    "sharp": "^0.35.4"
+  }
+}

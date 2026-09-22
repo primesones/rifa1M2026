@@ -1,0 +1,46 @@
+name: Enviar imagen de números disponibles a Telegram
+
+on:
+  schedule:
+    # 08:00 y 20:00 hora Colombia (UTC-5) = 13:00 y 01:00 UTC
+    - cron: '0 1,13 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  enviar-imagen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar Chromium para Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Generar la imagen de la cabecera y la grilla
+        run: node scripts/captura-numeros.mjs numeros-disponibles.png
+
+      - name: Enviar la imagen por Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          respuesta=$(curl -s -w "\n%{http_code}" \
+            -F chat_id="$TELEGRAM_CHAT_ID" \
+            -F caption="Números disponibles - Rifa del millón 2026" \
+            -F photo=@numeros-disponibles.png \
+            "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendPhoto")
+          codigo="${respuesta##*$'\n'}"
+          cuerpo="${respuesta%$'\n'*}"
+          echo "$cuerpo"
+          if [ "$codigo" != "200" ]; then
+            echo "Telegram respondió con código $codigo"
+            exit 1
+          fi
