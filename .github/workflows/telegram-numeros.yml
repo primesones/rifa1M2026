@@ -2,40 +2,67 @@ name: Enviar imagen de números disponibles a Telegram
 
 on:
   schedule:
-    # 08:00 y 20:00 hora Colombia (UTC-5) = 13:00 y 01:00 UTC
-    - cron: '0 1,13 * * *'
+    # Cada 4 horas hora Colombia (UTC-5): 00:00, 04:00, 08:00, 12:00, 16:00, 20:00
+    # equivalen a 05:00, 09:00, 13:00, 17:00, 21:00, 01:00 UTC
+    - cron: '0 1,5,9,13,17,21 * * *'
   workflow_dispatch: {}
 
 jobs:
   enviar-imagen:
     runs-on: ubuntu-latest
     steps:
+      - name: Verificar si ya pasó la fecha límite (4 de octubre de 2026)
+        id: fecha
+        run: |
+          limite="2026-10-04"
+          hoy=$(TZ="America/Bogota" date +%Y-%m-%d)
+          if [[ "$hoy" > "$limite" ]]; then
+            echo "activo=false" >> "$GITHUB_OUTPUT"
+            echo "Fecha límite ($limite) superada, no se enviará la imagen."
+          else
+            echo "activo=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Descargar el repositorio
+        if: steps.fecha.outputs.activo == 'true'
         uses: actions/checkout@v4
 
       - name: Configurar Node.js
+        if: steps.fecha.outputs.activo == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Instalar dependencias
+        if: steps.fecha.outputs.activo == 'true'
         run: npm ci
 
       - name: Instalar Chromium para Playwright
+        if: steps.fecha.outputs.activo == 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Generar la imagen de la cabecera y la grilla
+        if: steps.fecha.outputs.activo == 'true'
         run: node scripts/captura-numeros.mjs numeros-disponibles.png
 
       - name: Enviar la imagen por Telegram
+        if: steps.fecha.outputs.activo == 'true'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Opcional: solo si se envía a un topic dentro de un grupo con Temas activados
+          TELEGRAM_THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
         run: |
-          respuesta=$(curl -s -w "\n%{http_code}" \
-            -F chat_id="$TELEGRAM_CHAT_ID" \
-            -F caption="Números disponibles - Rifa del millón 2026" \
-            -F photo=@numeros-disponibles.png \
+          campos=(
+            -F chat_id="$TELEGRAM_CHAT_ID"
+            -F caption="Números disponibles - Rifa del millón 2026"
+            -F photo=@numeros-disponibles.png
+          )
+          if [ -n "$TELEGRAM_THREAD_ID" ]; then
+            campos+=(-F message_thread_id="$TELEGRAM_THREAD_ID")
+          fi
+
+          respuesta=$(curl -s -w "\n%{http_code}" "${campos[@]}" \
             "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendPhoto")
           codigo="${respuesta##*$'\n'}"
           cuerpo="${respuesta%$'\n'*}"
