@@ -1,10 +1,7 @@
 name: Enviar imagen de números disponibles a Telegram
 
 on:
-  schedule:
-    # Cada 4 horas hora Colombia (UTC-5): 00:00, 04:00, 08:00, 12:00, 16:00, 20:00
-    # equivalen a 05:00, 09:00, 13:00, 17:00, 21:00, 01:00 UTC
-    - cron: '0 1,5,9,13,17,21 * * *'
+  # Envío automático desactivado: todas las boletas se vendieron.
   workflow_dispatch: {}
 
 jobs:
